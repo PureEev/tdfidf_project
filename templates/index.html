@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>TF-IDF Анализатор</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    table {
+      margin-top: 20px;
+    }
+    .message {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>TF-IDF Анализатор</h1>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li class="message">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
+    <label for="file">Выберите текстовый файл (.txt):</label>
+    <input type="file" name="file" id="file" accept=".txt">
+    <button type="submit">Загрузить и обработать</button>
+  </form>
+
+  {% if results %}
+    <h2>Результаты обработки (топ 50 слов)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Слово</th>
+          <th>TF (частота)</th>
+          <th>IDF (обратная частота)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for word, tf, idf in results %}
+        <tr>
+          <td>{{ word }}</td>
+          <td>{{ tf }}</td>
+          <td>{{ "%.4f"|format(idf) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <p><a href="{{ url_for('documents') }}">Посмотреть загруженные документы</a></p>
+</body>
+</html>
